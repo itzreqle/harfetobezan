@@ -12,7 +12,7 @@ $message_error;
 // Check if the user is already logged in, if yes then redirect him/her to profile
 if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] === true) {
     // Redirect user to profile
-    header("location: profile");
+    header("location: /profile");
     exit;
 }
 
@@ -54,7 +54,7 @@ if (isset($_POST['login'])) {
                 $_SESSION["logged_in"] = true;
 
                 // Redirect user to profile
-                header("location: profile");
+                header("location: /profile");
             } else {
                 $message_error = "Invalid username or password.";;
             }
@@ -88,7 +88,7 @@ if (isset($_POST['login'])) {
             $con->query($query);
 
             // Redirect user to profile
-            header("location: profile");
+            header("location: /profile");
         }
     }
 }
