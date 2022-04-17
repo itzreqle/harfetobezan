@@ -23,6 +23,12 @@ post('/view', '/pages/view.php');
 get('/challenge/$challenge_id', '/pages/challenge.php');
 post('/challenge/$challenge_id', '/pages/challenge.php');
 
+// API
+get('/api/v1/theme', '/api/v1/theme.php');
+post('/api/v1/theme', '/api/v1/theme.php');
+get('/theme', '/api/v1/theme.php');
+post('/theme', '/api/v1/theme.php');
+
 // Dynamic GET. Example with 1 variable
 // The $id will be available in user.php
 // get('/user/$id', 'user.php');

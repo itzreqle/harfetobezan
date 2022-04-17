@@ -2,6 +2,9 @@
 
 session_start();
 
+if (!isset($_SESSION['theme']))
+    $_SESSION['theme'] = 'dark-theme';
+
 function get($route, $path_to_include)
 {
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
