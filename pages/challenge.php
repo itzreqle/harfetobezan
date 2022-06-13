@@ -39,9 +39,14 @@ if (isset($_POST['send'])) {
 
     // Check input errors before inserting in database
     if (empty($message_error)) {
-        $insert_query = "INSERT INTO `post` (`post_id`, `author`, `post_date`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `modify_date`, `guid`, `post_type`, `mime_type`, `post_parent`) VALUES (NULL, NULL, CURRENT_TIMESTAMP, '$message', '$message_name', 'Reply', 'visiter', CURRENT_TIMESTAMP, '$guid', 'reply', NULL, '$post_id');";
+        // $insert_query = "INSERT INTO `post` (`post_id`, `author`, `post_date`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `modify_date`, `guid`, `post_type`, `mime_type`, `post_parent`) VALUES (NULL, NULL, CURRENT_TIMESTAMP, '$message', '$message_name', 'Reply', 'visiter', CURRENT_TIMESTAMP, '$guid', 'reply', NULL, '$post_id');";
 
-        $con->query($insert_query);
+        // $con->query($insert_query);
+        $stmt = $con->prepare("INSERT INTO `post` (`post_date`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `modify_date`, `guid`, `post_type`, `post_parent`) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?);");
+
+        $stmt->bind_param('ssssssssi', CURRENT_TIMESTAMP, $message, $message_name, 'Reply', 'visiter', CURRENT_TIMESTAMP, $guid, 'reply', $post_id);
+
+        $stmt->execute();
     }
 }
 
