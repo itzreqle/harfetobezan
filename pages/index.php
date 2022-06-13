@@ -76,6 +76,7 @@ if (isset($_POST['login'])) {
 
             $stmt->execute();
             
+            // $new_user_id = $con->insert_id;
             $new_user_id = $stmt->insert_id;
             
 
