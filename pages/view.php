@@ -55,9 +55,15 @@ if (isset($_POST['delete_link'])) {
     $random_id = $functions->GenerateRandomLink();
     $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/challenge/' . $random_id; //  . $_SERVER['REQUEST_URI']
 
-    $query = "INSERT INTO `post` (`post_id`, `author`, `post_date`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `modify_date`, `guid`, `post_type`, `mime_type`, `post_parent`) VALUES (NULL, $id, CURRENT_TIMESTAMP, '$url', '$username', 'New Generated Link', 'owner', CURRENT_TIMESTAMP, '$random_id', 'link', NULL, '0')";
+    // $query = "INSERT INTO `post` (`post_id`, `author`, `post_date`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `modify_date`, `guid`, `post_type`, `mime_type`, `post_parent`) VALUES (NULL, $id, CURRENT_TIMESTAMP, '$url', '$username', 'New Generated Link', 'owner', CURRENT_TIMESTAMP, '$random_id', 'link', NULL, '0')";
 
-    $con->query($query);
+    // $con->query($query);
+    
+    $stmt = $con->prepare("INSERT INTO `post` (`author`, `post_date`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `modify_date`, `guid`, `post_type`, `post_parent`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"); 
+    // ($id, CURRENT_TIMESTAMP, '$url', '$username', 'New Generated Link', 'owner', CURRENT_TIMESTAMP, '$random_id', 'link', '0')
+    $stmt->bind_param('isssssssss', $id, CURRENT_TIMESTAMP, '$url', '$username', 'New Generated Link', 'owner', CURRENT_TIMESTAMP, '$random_id', 'link', '0');
+
+    $stmt->execute();
 
     header("Refresh: 0");
     // header("Refresh: 0; url=name.php");
