@@ -65,10 +65,19 @@ if (isset($_POST['login'])) {
             //     $query = "INSERT INTO `users` (`user_id`, `login`, `password`, `nikname`, `email`, `url`, `registered`, `status`, `display_name`) VALUES (NULL, '$username', '$password_hash', '$username', '$email', NULL, CURRENT_TIMESTAMP, '1', '$username');";
             // }
 
-            $query = "INSERT INTO `users` (`user_id`, `login`, `password`, `nikname`, `email`, `url`, `registered`, `status`, `display_name`) VALUES (NULL, '$username', '$password_hash', '$username', NULL, NULL, CURRENT_TIMESTAMP, '1', '$username');";
+            // $query = "INSERT INTO `users` (`user_id`, `login`, `password`, `nikname`, `email`, `url`, `registered`, `status`, `display_name`) VALUES (NULL, '$username', '$password_hash', '$username', NULL, NULL, CURRENT_TIMESTAMP, '1', '$username');";
 
-            $con->query($query);
-            $new_user_id = $con->insert_id;
+            // $con->query($query);
+            
+            $stmt = $con->prepare("INSERT INTO `users` (`login`, `password`, `nikname`, `registered`, `status`, `display_name`) VALUES (?, ?, ?, ?, ?, ?);");
+            // ('$username', '$password_hash', '$username', CURRENT_TIMESTAMP, '1', '$username')
+
+            $stmt->bind_param('ssssss', $username, $password_hash, $username, CURRENT_TIMESTAMP, '1', $username);
+
+            $stmt->execute();
+            
+            $new_user_id = $stmt->insert_id;
+            
 
             // $query = "INSERT INTO `user_meta` (`umeta_id`, `user_id`, `key`, `value`) VALUES (NULL, '$new_user_id', 'role', 'user');";
 
