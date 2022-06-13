@@ -17,7 +17,7 @@ if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] === true) {
 }
 
 if (isset($_POST['login'])) {
-    $last_username = trim($_POST["username"]);
+    $last_username = htmlspecialchars(trim($_POST["username"]), ENT_QUOTES , 'UTF-8'));
     // $last_password = trim($_POST["password"]);
 
     // Validate username
@@ -27,7 +27,7 @@ if (isset($_POST['login'])) {
         $message_error = "Username can only contain letters, numbers, and underscores.";
     } else {
         // Prepare a select statement
-        $username = trim($_POST["username"]);
+        $username = htmlspecialchars(trim($_POST["username"]), ENT_QUOTES , 'UTF-8'));
 
         $query = "SELECT * FROM `users` WHERE `login` = '$username';";
         $user_exists = $functions->FetchAssoc($query, $con);
