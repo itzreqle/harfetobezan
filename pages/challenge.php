@@ -24,8 +24,8 @@ if (!$data) {
 }
 
 if (isset($_POST['send'])) { 
-    $message_name = trim($_POST["name"]);
-    $message = trim($_POST["message"]);
+    $message_name = htmlspecialchars(trim($_POST["name"]), ENT_QUOTES , 'UTF-8');
+    $message = htmlspecialchars(trim($_POST["message"]), ENT_QUOTES , 'UTF-8');
 
     // Validate message
     if (empty($message_name)) {
