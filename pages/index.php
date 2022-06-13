@@ -70,9 +70,15 @@ if (isset($_POST['login'])) {
             $con->query($query);
             $new_user_id = $con->insert_id;
 
-            $query = "INSERT INTO `user_meta` (`umeta_id`, `user_id`, `key`, `value`) VALUES (NULL, '$new_user_id', 'role', 'user');";
+            // $query = "INSERT INTO `user_meta` (`umeta_id`, `user_id`, `key`, `value`) VALUES (NULL, '$new_user_id', 'role', 'user');";
 
-            $con->query($query);
+            // $con->query($query);
+            
+            $stmt = $con->prepare("INSERT INTO `user_meta` (`user_id`, `key`, `value`) VALUES (?, ?, ?);");
+
+            $stmt->bind_param('iss', '$new_user_id', 'role', 'user');
+
+            $stmt->execute();
 
             // Store data in session variables
             $_SESSION["id"] = $new_user_id;
@@ -83,9 +89,15 @@ if (isset($_POST['login'])) {
             $random_id = $functions->GenerateRandomLink();
             $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/challenge/' . $random_id; //  . $_SERVER['REQUEST_URI']
 
-            $query = "INSERT INTO `post` (`post_id`, `author`, `post_date`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `modify_date`, `guid`, `post_type`, `mime_type`, `post_parent`) VALUES (NULL, NULL, CURRENT_TIMESTAMP, '$url', '$username', 'Generated Link', 'owner', CURRENT_TIMESTAMP, '$random_id', 'link', NULL, '0')";
+            // $query = "INSERT INTO `post` (`post_id`, `author`, `post_date`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `modify_date`, `guid`, `post_type`, `mime_type`, `post_parent`) VALUES (NULL, NULL, CURRENT_TIMESTAMP, '$url', '$username', 'Generated Link', 'owner', CURRENT_TIMESTAMP, '$random_id', 'link', NULL, '0')";
 
-            $con->query($query);
+            // $con->query($query);
+            
+            $stmt = $con->prepare("INSERT INTO `post` (`author`, `post_date`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `modify_date`, `guid`, `post_type`, `post_parent`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"); 
+            // ($id, CURRENT_TIMESTAMP, '$url', '$username', 'New Generated Link', 'owner', CURRENT_TIMESTAMP, '$random_id', 'link', '0')
+            $stmt->bind_param('isssssssss', $id, CURRENT_TIMESTAMP, '$url', '$username', 'Generated Link', 'owner', CURRENT_TIMESTAMP, '$random_id', 'link', '0');
+
+            $stmt->execute();
 
             // Redirect user to profile
             header("location: /profile");
