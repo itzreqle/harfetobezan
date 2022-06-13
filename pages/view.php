@@ -61,7 +61,7 @@ if (isset($_POST['delete_link'])) {
     
     $stmt = $con->prepare("INSERT INTO `post` (`author`, `post_date`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `modify_date`, `guid`, `post_type`, `post_parent`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"); 
     // ($id, CURRENT_TIMESTAMP, '$url', '$username', 'New Generated Link', 'owner', CURRENT_TIMESTAMP, '$random_id', 'link', '0')
-    $stmt->bind_param('isssssssss', $id, CURRENT_TIMESTAMP, '$url', '$username', 'New Generated Link', 'owner', CURRENT_TIMESTAMP, '$random_id', 'link', '0');
+    $stmt->bind_param('isssssssss', $id, CURRENT_TIMESTAMP, $url, $username, 'New Generated Link', 'owner', CURRENT_TIMESTAMP, $random_id, 'link', '0');
 
     $stmt->execute();
 
