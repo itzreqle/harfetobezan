@@ -55,13 +55,19 @@ if (isset($_POST['delete_link'])) {
     $random_id = $functions->GenerateRandomLink();
     $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/challenge/' . $random_id; //  . $_SERVER['REQUEST_URI']
 
-    // $query = "INSERT INTO `post` (`post_id`, `author`, `post_date`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `modify_date`, `guid`, `post_type`, `mime_type`, `post_parent`) VALUES (NULL, $id, CURRENT_TIMESTAMP, '$url', '$username', 'New Generated Link', 'owner', CURRENT_TIMESTAMP, '$random_id', 'link', NULL, '0')";
+    // $query = "INSERT INTO `post` (`post_id`, `author`, `post_date`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `modify_date`, `guid`, `post_type`, `mime_type`, `post_parent`) VALUES (NULL, $id, 'CURRENT_TIMESTAMP', '$url', '$username', 'New Generated Link', 'owner', 'CURRENT_TIMESTAMP', '$random_id', 'link', NULL, '0')";
 
     // $con->query($query);
     
-    $stmt = $con->prepare("INSERT INTO `post` (`author`, `post_date`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `modify_date`, `guid`, `post_type`, `post_parent`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"); 
-    // ($id, CURRENT_TIMESTAMP, '$url', '$username', 'New Generated Link', 'owner', CURRENT_TIMESTAMP, '$random_id', 'link', '0')
-    $stmt->bind_param('isssssssss', $id, CURRENT_TIMESTAMP, $url, $username, 'New Generated Link', 'owner', CURRENT_TIMESTAMP, $random_id, 'link', '0');
+    $stmt = $con->prepare("INSERT INTO `post` (`author`, `post_date`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `modify_date`, `guid`, `post_type`, `post_parent`) VALUES (?, CURRENT_TIMESTAMP, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?)"); 
+    // ($id, 'CURRENT_TIMESTAMP', '$url', '$username', 'New Generated Link', 'owner', 'CURRENT_TIMESTAMP', '$random_id', 'link', '0')
+            
+    $link = 'New Generated Link';
+    $post_status = 'owner';
+    $post_type = 'link';
+    $post_parent = '0';
+
+    $stmt->bind_param('isssssss', $id, $url, $username, $link, $post_status, $random_id, $post_type, $post_parent);
 
     $stmt->execute();
 
