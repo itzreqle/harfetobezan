@@ -62,17 +62,19 @@ if (isset($_POST['login'])) {
             // if (filter_var($username, FILTER_VALIDATE_EMAIL)) {
             //     // Email is valid
             //     $email = $username;
-            //     $query = "INSERT INTO `users` (`user_id`, `login`, `password`, `nikname`, `email`, `url`, `registered`, `status`, `display_name`) VALUES (NULL, '$username', '$password_hash', '$username', '$email', NULL, CURRENT_TIMESTAMP, '1', '$username');";
+            //     $query = "INSERT INTO `users` (`user_id`, `login`, `password`, `nikname`, `email`, `url`, `registered`, `status`, `display_name`) VALUES (NULL, '$username', '$password_hash', '$username', '$email', NULL, 'CURRENT_TIMESTAMP', '1', '$username');";
             // }
 
-            // $query = "INSERT INTO `users` (`user_id`, `login`, `password`, `nikname`, `email`, `url`, `registered`, `status`, `display_name`) VALUES (NULL, '$username', '$password_hash', '$username', NULL, NULL, CURRENT_TIMESTAMP, '1', '$username');";
+            // $query = "INSERT INTO `users` (`user_id`, `login`, `password`, `nikname`, `email`, `url`, `registered`, `status`, `display_name`) VALUES (NULL, '$username', '$password_hash', '$username', NULL, NULL, 'CURRENT_TIMESTAMP', '1', '$username');";
 
             // $con->query($query);
             
-            $stmt = $con->prepare("INSERT INTO `users` (`login`, `password`, `nikname`, `registered`, `status`, `display_name`) VALUES (?, ?, ?, ?, ?, ?);");
-            // ('$username', '$password_hash', '$username', CURRENT_TIMESTAMP, '1', '$username')
+            $stmt = $con->prepare("INSERT INTO `users` (`login`, `password`, `nikname`, `email`, `registered`, `status`, `display_name`) VALUES (?, ?, ?, '',CURRENT_TIMESTAMP, '1', ?);");
+            // ('$username', '$password_hash', '$username', 'CURRENT_TIMESTAMP', '1', '$username')
+            $nikname = $username;
+            $displayname = $username;
 
-            $stmt->bind_param('ssssss', $username, $password_hash, $username, CURRENT_TIMESTAMP, '1', $username);
+            $stmt->bind_param('ssss', $username, $password_hash, $nikname, $displayname);
 
             $stmt->execute();
             
@@ -86,7 +88,10 @@ if (isset($_POST['login'])) {
             
             $stmt = $con->prepare("INSERT INTO `user_meta` (`user_id`, `key`, `value`) VALUES (?, ?, ?);");
 
-            $stmt->bind_param('iss', $new_user_id, 'role', 'user');
+            $role = 'role';
+            $user = 'user';
+
+            $stmt->bind_param('iss', $new_user_id, $role, $user);
 
             $stmt->execute();
 
@@ -99,13 +104,19 @@ if (isset($_POST['login'])) {
             $random_id = $functions->GenerateRandomLink();
             $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/challenge/' . $random_id; //  . $_SERVER['REQUEST_URI']
 
-            // $query = "INSERT INTO `post` (`post_id`, `author`, `post_date`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `modify_date`, `guid`, `post_type`, `mime_type`, `post_parent`) VALUES (NULL, NULL, CURRENT_TIMESTAMP, '$url', '$username', 'Generated Link', 'owner', CURRENT_TIMESTAMP, '$random_id', 'link', NULL, '0')";
+            // $query = "INSERT INTO `post` (`post_id`, `author`, `post_date`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `modify_date`, `guid`, `post_type`, `mime_type`, `post_parent`) VALUES (NULL, NULL, 'CURRENT_TIMESTAMP', '$url', '$username', 'Generated Link', 'owner', 'CURRENT_TIMESTAMP', '$random_id', 'link', NULL, '0')";
 
             // $con->query($query);
             
-            $stmt = $con->prepare("INSERT INTO `post` (`author`, `post_date`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `modify_date`, `guid`, `post_type`, `post_parent`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"); 
-            // ($id, CURRENT_TIMESTAMP, '$url', '$username', 'New Generated Link', 'owner', CURRENT_TIMESTAMP, '$random_id', 'link', '0')
-            $stmt->bind_param('isssssssss', $id, CURRENT_TIMESTAMP, $url, $username, 'Generated Link', 'owner', CURRENT_TIMESTAMP, $random_id, 'link', '0');
+            $stmt = $con->prepare("INSERT INTO `post` (`author`, `post_date`, `post_content`, `post_title`, `post_excerpt`, `post_status`, `modify_date`, `guid`, `post_type`, `post_parent`) VALUES (?, CURRENT_TIMESTAMP, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?)"); 
+            // ($id, 'CURRENT_TIMESTAMP', '$url', '$username', 'Generated Link', 'owner', 'CURRENT_TIMESTAMP', '$random_id', 'link', '0')
+            
+            $link = 'Generated Link';
+            $post_status = 'owner';
+            $post_type = 'link';
+            $post_parent = '0';
+
+            $stmt->bind_param('isssssss', $id, $url, $username, $link, $post_status, $random_id, $post_type, $post_parent);
 
             $stmt->execute();
 
